@@ -166,6 +166,11 @@ function kruize_local_experiments() {
 		grep -E '"experiment_name"|"container_name"|"type"|"namespace"' experiments/${experiment}.json | grep -v '"experiment_type"' | sed -E 's/.*"experiment_name": "([^"]*)".*/\tExperiment: \1/; s/.*"type": "([^"]*)".*/\tType: \1/; s/.*"container_name": "([^"]*)".*/\tContainer: \1/; s/.*"namespace": "([^"]*)".*/\tNamespace: \1/;'
 	done
 
+	echo "*********** wait_for_reco = $wait_for_reco"
+	if [ ${wait_for_reco} == 1 ]; then
+		sleep 60
+	fi
+
 	for experiment in "${EXPERIMENTS[@]}"; do
 		echo >> "${LOG_FILE}" 2>&1
 		echo "######################################################" >> "${LOG_FILE}" 2>&1
@@ -364,7 +369,6 @@ function update_vpa_roles() {
 function kruize_local_demo_setup() {
 	bench=$1
 	kruize_operator=$2
-	
 	# Start all the installs
 	start_time=$(get_date)
 	echo | tee -a "${LOG_FILE}"

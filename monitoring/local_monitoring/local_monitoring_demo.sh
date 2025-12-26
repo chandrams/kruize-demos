@@ -40,7 +40,7 @@ TECHEMPOWER_PORT=8082
 KRUIZE_OPERATOR=0
 
 function usage() {
-	echo "Usage: $0 [-s|-t] [-c cluster-type] [-f] [-i kruize-image] [-u kruize-ui-image] [-e experiment_type] [ [-b] [-m benchmark-manifests] [-n namespace] [-l] [-d load-duration] ] [-p]"
+	echo "Usage: $0 [-s|-t] [-c cluster-type] [-f] [-i kruize-image] [-u kruize-ui-image] [-e experiment_type] [ [-b] [-m benchmark-manifests] [-n namespace] [-l] [-d load-duration] ] [-p] [-w]"
 	echo "s = start (default), t = terminate"
 	echo "c = supports minikube, kind, aks and openshift cluster-type"
 	echo "f = create environment setup if cluster-type is minikube, kind"
@@ -52,6 +52,7 @@ function usage() {
 	echo "m = manifests of the benchmark"
 	echo "n = namespace of benchmark. Default - default"
 	echo "l = Run a load against the benchmark"
+	echo "w = Wait for recommendations to be generated"
 	echo "d = duration to run the benchmark load"
 	echo "p = expose prometheus port"
 	echo "k = install kruize using deploy scripts."
@@ -73,13 +74,18 @@ export LOAD_DURATION="1200"
 export BENCHMARK_MANIFESTS="resource_provisioning_manifests"
 export EXPERIMENT_TYPE=""
 export KRUIZE_OPERATOR_IMAGE=""
+export wait_for_reco=0
+
 # Iterate through the commandline options
-while getopts bc:d:e:fi:klm:no:pstu: gopts
+while getopts bc:d:e:fi:klm:no:pstwu: gopts
 do
 	case "${gopts}" in
 		b)
 			start_demo=2
 			benchmark=1
+			;;
+		w)
+			wait_for_reco=1
 			;;
 		c)
 			CLUSTER_TYPE="${OPTARG}"
@@ -171,7 +177,7 @@ if [ ${start_demo} -eq 1 ]; then
 	  check_err "ERROR: Go pre-requisite check failed. Cannot proceed with operator deployment."
 	fi
 
-	kruize_local_demo_setup ${BENCHMARK} ${KRUIZE_OPERATOR}
+	kruize_local_demo_setup ${BENCHMARK} ${KRUIZE_OPERATOR} ${wait_for_reco}
 	echo "For detailed logs, look in kruize-demo.log"
 	echo
 elif [ ${start_demo} -eq 2 ]; then
