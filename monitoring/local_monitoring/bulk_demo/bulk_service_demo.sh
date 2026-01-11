@@ -62,6 +62,9 @@ function usage() {
 }
 
 function kruize_bulk() {
+  echo -n "🔄 Waiting for ${wait_for_reco} seconds for metrics to be available..."
+  sleep "${wait_for_reco}"
+  echo "✅ done! "
   echo "Running bulk_demo.py..." >> "${LOG_FILE}" 2>&1
   "${PYTHON_CMD}" -u bulk_demo.py -c "${CLUSTER_TYPE}"
   {
@@ -80,13 +83,17 @@ export env_setup=0
 export start_demo=1
 export APP_NAMESPACE="default"
 export LOAD_DURATION="1200"
+export wait_for_reco=0
 
 # Iterate through the commandline options
-while getopts c:i:n:d:klfprstu:o: gopts
+while getopts c:i:n:d:w:klfprstu:o: gopts
 do
 	case "${gopts}" in
 		c)
 			CLUSTER_TYPE="${OPTARG}"
+			;;
+		w)
+			wait_for_reco="${OPTARG}"
 			;;
 		i)
 			KRUIZE_DOCKER_IMAGE="${OPTARG}"

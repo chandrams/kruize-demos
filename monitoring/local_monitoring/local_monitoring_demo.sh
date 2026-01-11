@@ -85,7 +85,7 @@ do
 			benchmark=1
 			;;
 		w)
-			wait_for_reco=1
+			wait_for_reco="${OPTARG}"
 			;;
 		c)
 			CLUSTER_TYPE="${OPTARG}"

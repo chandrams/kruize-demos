@@ -167,8 +167,9 @@ function kruize_local_experiments() {
 	done
 
 	echo "*********** wait_for_reco = $wait_for_reco"
-	if [ ${wait_for_reco} == 1 ]; then
-		sleep 60
+	if [ ${wait_for_reco} != 0 ]; then
+		echo "Waiting for recommendations to be generated..." >> "${LOG_FILE}" 2>&1
+		sleep "${wait_for_reco}"
 	fi
 
 	for experiment in "${EXPERIMENTS[@]}"; do
