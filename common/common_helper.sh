@@ -16,7 +16,7 @@
 #
 
 # Minimum resources required to run the demo
-MIN_CPU=8
+MIN_CPU=4
 MIN_MEM=16384
 KIND_KUBERNETES_VERSION=v1.28.0
 # By default, it is recommended to use containerd for the docker driver and crio for the podman driver as the container runtime.
